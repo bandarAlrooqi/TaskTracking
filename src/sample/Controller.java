@@ -44,6 +44,7 @@ public class Controller implements Initializable {
     public TextField name = new TextField();
     public TextField description = new TextField();
     public TextField price = new TextField();
+    public DatePicker dueDate = new DatePicker();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         moveTaskB.setDisable(true);
@@ -81,7 +82,7 @@ public class Controller implements Initializable {
 
 
     public void clickAddToList(ActionEvent actionEvent) {
-        tableToDo.getItems().add(new Data(name.getText(),description.getText(),Integer.parseInt(price.getText())));
+        tableToDo.getItems().add(new Data(name.getText(),description.getText(),Integer.parseInt(price.getText()),dueDate.getValue()));
     }
     public void clickMoveB(ActionEvent actionEvent){
         moveTaskB.setText("Move");
@@ -93,6 +94,8 @@ public class Controller implements Initializable {
 
         else if(indexInProgress!= -1)
             doneList.getItems().add(tableInProgress.getItems().remove(indexInProgress).toString());
+        System.out.println(dueDate.getValue());
+        var i =dueDate.getValue();
 
         moveTaskB.setDisable(true);
         tableToDo.getSelectionModel().clearSelection();

@@ -1,21 +1,23 @@
 package sample;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Data {
-    String name,description,date;
+    String name,description;
+    LocalDate date;
     int price;
 
     public int getPrice() {
         return price;
     }
 
-    public Data(String name, String description, int price) {
+    public Data(String name, String description, int price,LocalDate date) {
         this.name = name;
         this.price=price;
         this.description = description;
-        this.date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        this.date = date;
     }
 
     public String getName() {
@@ -26,7 +28,7 @@ public class Data {
         return description;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
     public String toString(){
