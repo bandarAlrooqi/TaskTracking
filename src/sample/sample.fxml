@@ -7,7 +7,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="519.0" prefWidth="812.0" xmlns:controller="sample.Controller" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <MenuBar prefHeight="86.0" prefWidth="802.0">
+      <MenuBar prefHeight="48.0" prefWidth="818.0">
          <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
@@ -46,11 +46,60 @@
             </Menu>
          </menus>
       </MenuBar>
-      <SplitPane dividerPositions="0.2261369315342329, 0.7508745627186407" focusTraversable="true" prefHeight="518.0" prefWidth="802.0">
+      <ButtonBar opacity="0.84" prefHeight="20.0" prefWidth="812.0">
+        <buttons>
+          <Button fx:id="addToList" mnemonicParsing="false" onAction="#clickAddToList" text="Add" textAlignment="JUSTIFY" />
+            <Button fx:id="moveTaskB" mnemonicParsing="false" onAction="#clickMoveB" text="Move" ButtonBar.buttonData="LEFT" />
+            <TextField fx:id="name" promptText="Name" />
+            <TextField fx:id="description" promptText="Description" />
+            <TextField fx:id="price" promptText="Price" />
+        </buttons>
+      </ButtonBar>
+      <SplitPane dividerPositions="0.40987654320987654, 0.8185185185185185" focusTraversable="true" prefHeight="489.0" prefWidth="812.0">
          <items>
+            <AnchorPane prefHeight="473.0" prefWidth="274.0">
+               <children>
+                  <Label alignment="CENTER" layoutX="22.0" layoutY="14.0" style="&#10;" text="To Do" textAlignment="CENTER" wrapText="false">
+                     <font>
+                        <Font size="18.0" fx:id="x11" />
+                     </font>
+                     <textFill>
+                        <Color red="0.624" green="0.624" blue="0.624" fx:id="x21" />
+                     </textFill>
+                  </Label>
+                  <TableView fx:id="tableToDo" layoutY="47.0" prefHeight="420.0" prefWidth="330.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
+                    <columns>
+                      <TableColumn fx:id="nameColToDo" prefWidth="59.199983179569244" text="Name" />
+                      <TableColumn fx:id="descriptionToDo" minWidth="9.599937438964844" prefWidth="116.40002059936523" text="Description" />
+                        <TableColumn fx:id="priceToDo" minWidth="0.0" prefWidth="48.800018310546875" text="Price" />
+                        <TableColumn fx:id="dueDateToDo" prefWidth="103.19999084472659" text="Due Date" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="266.0" prefWidth="402.0">
+               <children>
+                  <TableView fx:id="tableInProgress" layoutY="47.0" prefHeight="420.0" prefWidth="326.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
+                     <columns>
+                        <TableColumn fx:id="nameIn" prefWidth="59.199983179569244" text="Name" />
+                        <TableColumn fx:id="descriptionIn" minWidth="9.599937438964844" prefWidth="98.4000244140625" text="Description" />
+                        <TableColumn fx:id="priceIn" minWidth="0.0" prefWidth="41.5999755859375" text="Price" />
+                        <TableColumn fx:id="dueDateIn" prefWidth="126.39990234375" text="Due Date" />
+                     </columns>
+                  </TableView>
+                  <Label alignment="CENTER" layoutX="15.0" layoutY="11.0" style="&#10;" text="In Progress" textAlignment="CENTER" wrapText="false">
+                     <font>
+                        <Font size="18.0" fx:id="x12" />
+                     </font>
+                     <textFill>
+                        <Color red="0.624" green="0.624" blue="0.624" fx:id="x22" />
+                     </textFill>
+                  </Label>
+               </children>
+            </AnchorPane>
             <AnchorPane>
                <children>
-                  <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="To do" textAlignment="CENTER" wrapText="false">
+                  <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Done" textAlignment="CENTER" wrapText="false">
                      <font>
                         <Font size="18.0" fx:id="x1" />
                      </font>
@@ -58,30 +107,7 @@
                         <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
                      </textFill>
                   </Label>
-                  <ListView fx:id="toDoList" layoutY="44.0" prefHeight="401.0" prefWidth="180.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0" />
-                  <VBox layoutY="438.0" />
-                  <Button fx:id="addToList" layoutX="14.0" layoutY="447.0" mnemonicParsing="false" onAction="#clickAddToList" prefHeight="27.0" prefWidth="180.0" text="Add" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="447.0" />
-               </children>
-            </AnchorPane>
-            <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
-               <content>
-                  <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="449.0" prefWidth="398.0">
-                     <children>
-                        <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="27.0" prefWidth="126.0" style="&#10;" text="In progress" textAlignment="CENTER" wrapText="false">
-                           <font>
-                              <Font size="18.0" fx:id="x1" />
-                           </font>
-                           <textFill>
-                              <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
-                           </textFill>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </ScrollPane>
-            <AnchorPane>
-               <children>
-                  <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Done" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                  <ListView fx:id="doneList" layoutX="14.0" layoutY="44.0" prefHeight="420.0" prefWidth="144.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0" />
                </children>
             </AnchorPane>
          </items>
