@@ -38,6 +38,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         moveTaskB.setDisable(true);
+        dueDate.setEditable(false);
         nameColToDo.setCellValueFactory(new PropertyValueFactory<>("name"));
         descriptionToDo.setCellValueFactory(new PropertyValueFactory<>("description"));
         priceToDo.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -53,15 +54,16 @@ public class Controller implements Initializable {
         doneList.setItems(RWFile.readDone());
         //rgx for Texts
         name.setTextFormatter(new TextFormatter<>(change -> {
-            addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0);
+            addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null);
             Pattern p = Pattern.compile("[A-za-z[ ]]+");
             return (p.matcher(change.getControlNewText()).matches()) || (change.getControlNewText().length() == 0) ? change : null;
         }));
         price.setTextFormatter(new TextFormatter<Object>(change -> {
-            addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0);
+            addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null);
             Pattern p = Pattern.compile("\\d+");
             return (p.matcher(change.getControlNewText()).matches()) || (change.getControlNewText().length() == 0) ? change : null;
         }));
+
         tableToDo.getSelectionModel().selectedItemProperty().addListener((observableValue, data, t1) -> moveTaskB.setDisable(tableToDo.getSelectionModel().selectedIndexProperty().getValue() == -1));
         tableInProgress.getSelectionModel().selectedItemProperty().addListener((observableValue, data, t1) -> {
             boolean check = tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1;
@@ -92,5 +94,9 @@ public class Controller implements Initializable {
         tableToDo.getSelectionModel().clearSelection();
         tableInProgress.getSelectionModel().clearSelection();
         RWFile.update(tableToDo,tableInProgress,doneList);
+    }
+
+    public void changeDate(ActionEvent actionEvent) {
+        addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null);
     }
 }
