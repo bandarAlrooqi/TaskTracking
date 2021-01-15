@@ -45,7 +45,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        moveTaskB.setDisable(true);
+        addToList.setVisible(false);
+        moveTaskB.setVisible(false);
+        deleteB.setVisible(false);
         dueDate.setEditable(false);
         nameColToDo.setCellValueFactory(new PropertyValueFactory<>("name"));
         descriptionToDo.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -62,18 +64,18 @@ public class Controller implements Initializable {
         doneList.setItems(RWFile.readDone());
         //rgx for Texts
         name.setTextFormatter(new TextFormatter<>(change -> {
-            addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null);
+            addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null));
             Pattern p = Pattern.compile("[A-za-z[ ]]+");
             return (p.matcher(change.getControlNewText()).matches()) || (change.getControlNewText().length() == 0) ? change : null;
         }));
         price.setTextFormatter(new TextFormatter<Object>(change -> {
-            addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null);
+            addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null));
             Pattern p = Pattern.compile("\\d+");
             return (p.matcher(change.getControlNewText()).matches()) || (change.getControlNewText().length() == 0) ? change : null;
         }));
 
         tableToDo.getSelectionModel().selectedItemProperty().addListener((observableValue, data, t1) -> {
-            moveTaskB.setDisable(tableToDo.getSelectionModel().selectedIndexProperty().getValue() == -1);
+            moveTaskB.setVisible(tableToDo.getSelectionModel().selectedIndexProperty().getValue() != -1);
             moveTaskB.setText("Move");
         });
         tableInProgress.getSelectionModel().selectedItemProperty().addListener((observableValue, data, t1) -> {
@@ -81,23 +83,9 @@ public class Controller implements Initializable {
             boolean check = tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1;
             if (check) {
                 moveTaskB.setText("Done");
-                moveTaskB.setDisable(false);
-            }
+                moveTaskB.setVisible(true);
+            }else moveTaskB.setVisible(false);
         });
-
-
-        ObjectProperty<TableRow<Data>> lastSelectedRow = new SimpleObjectProperty<>();
-        tableToDo.setRowFactory(tableView -> {
-            TableRow<Data> row = new TableRow<>();
-
-            row.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-                if (isNowSelected) {
-                    lastSelectedRow.set(row);
-                }
-            });
-            return row;
-        });
-
     }
 
 
@@ -120,43 +108,62 @@ public class Controller implements Initializable {
 
         else if (indexInProgress != -1)
             doneList.getItems().add(RWFile.done(tableInProgress.getItems().remove(indexInProgress)));
-
-        moveTaskB.setDisable(true);
+        RWFile.update(tableToDo,tableInProgress,doneList);
+        moveTaskB.setVisible(false);
+        deleteB.setVisible(false);
         tableToDo.getSelectionModel().clearSelection();
         tableInProgress.getSelectionModel().clearSelection();
-        RWFile.update(tableToDo,tableInProgress,doneList);
+
     }
 
     public void changeDate(ActionEvent actionEvent) {
-        addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null);
+        addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null));
     }
 
     public void checkTodo(MouseEvent mouseEvent) {
         moveTaskB.setText("Move");
-        if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
-            tableInProgress.getSelectionModel().clearSelection();
-        if(doneList.getSelectionModel().getSelectedIndex() != -1)
-            doneList.getSelectionModel().clearSelection();
-        deleteB.setDisable(false);
+        switcher(tableInProgress, tableToDo);
 
     }
 
     public void checkInProgress(MouseEvent mouseEvent) {
         if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue()!=-1)
             moveTaskB.setText("Done");
+        switcher(tableToDo, tableInProgress);
+    }
+
+    private void switcher(TableView<Data> tableToDo, TableView<Data> tableInProgress) {
+        moveTaskB.setVisible(false);
+        deleteB.setVisible(false);
         if(tableToDo.getSelectionModel().selectedIndexProperty().getValue()!=-1)
             tableToDo.getSelectionModel().clearSelection();
         if(doneList.getSelectionModel().getSelectedIndex() != -1)
             doneList.getSelectionModel().clearSelection();
-        deleteB.setDisable(false);
+        if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue() == -1)return;
+        deleteB.setVisible(true);
+        moveTaskB.setVisible(true);
     }
 
     public void checkDone(MouseEvent mouseEvent) {
-        moveTaskB.setDisable(true);
-        deleteB.setDisable(false);
+        moveTaskB.setVisible(false);
+        deleteB.setVisible(true);
         if(tableToDo.getSelectionModel().selectedIndexProperty().getValue()!=-1)
             tableToDo.getSelectionModel().clearSelection();
         if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
             tableInProgress.getSelectionModel().clearSelection();
+    }
+
+    public void clickDelete(ActionEvent actionEvent) {
+        moveTaskB.setVisible(false);
+        deleteB.setVisible(false);
+        int indexDoneList ,indexTodoList,indexInP;
+        if((indexDoneList=doneList.getSelectionModel().selectedIndexProperty().get())!=-1)
+            doneList.getItems().remove(indexDoneList);
+        else if((indexTodoList=tableToDo.getSelectionModel().selectedIndexProperty().getValue())!=-1)
+            tableToDo.getItems().remove(indexTodoList);
+        else if((indexInP=tableInProgress.getSelectionModel().selectedIndexProperty().getValue()) != -1)
+            tableInProgress.getItems().remove(indexInP);
+
+        RWFile.update(tableToDo,tableInProgress,doneList);
     }
 }
