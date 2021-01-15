@@ -1,10 +1,17 @@
 package sample;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -29,6 +36,7 @@ public class Controller implements Initializable {
     //Button
     public Button addToList = new Button();
     public Button moveTaskB = new Button();
+    public Button deleteB = new Button();
     //Text Filed
     public TextField name = new TextField();
     public TextField description = new TextField();
@@ -64,19 +72,42 @@ public class Controller implements Initializable {
             return (p.matcher(change.getControlNewText()).matches()) || (change.getControlNewText().length() == 0) ? change : null;
         }));
 
-        tableToDo.getSelectionModel().selectedItemProperty().addListener((observableValue, data, t1) -> moveTaskB.setDisable(tableToDo.getSelectionModel().selectedIndexProperty().getValue() == -1));
+        tableToDo.getSelectionModel().selectedItemProperty().addListener((observableValue, data, t1) -> {
+            moveTaskB.setDisable(tableToDo.getSelectionModel().selectedIndexProperty().getValue() == -1);
+            moveTaskB.setText("Move");
+        });
         tableInProgress.getSelectionModel().selectedItemProperty().addListener((observableValue, data, t1) -> {
+            tableToDo.getSelectionModel().clearSelection();
             boolean check = tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1;
             if (check) {
                 moveTaskB.setText("Done");
                 moveTaskB.setDisable(false);
             }
         });
+
+
+        ObjectProperty<TableRow<Data>> lastSelectedRow = new SimpleObjectProperty<>();
+        tableToDo.setRowFactory(tableView -> {
+            TableRow<Data> row = new TableRow<>();
+
+            row.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+                if (isNowSelected) {
+                    lastSelectedRow.set(row);
+                }
+            });
+            return row;
+        });
+
     }
 
 
     public void clickAddToList(ActionEvent actionEvent) {
         tableToDo.getItems().add(RWFile.toDo(new Data(name.getText(), description.getText(), Integer.parseInt(price.getText()), dueDate.getValue().atStartOfDay())));
+        name.clear();
+        description.clear();
+        price.clear();
+        dueDate.setValue(null);
+
     }
 
     public void clickMoveB(ActionEvent actionEvent) {
@@ -98,5 +129,34 @@ public class Controller implements Initializable {
 
     public void changeDate(ActionEvent actionEvent) {
         addToList.setDisable(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null);
+    }
+
+    public void checkTodo(MouseEvent mouseEvent) {
+        moveTaskB.setText("Move");
+        if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
+            tableInProgress.getSelectionModel().clearSelection();
+        if(doneList.getSelectionModel().getSelectedIndex() != -1)
+            doneList.getSelectionModel().clearSelection();
+        deleteB.setDisable(false);
+
+    }
+
+    public void checkInProgress(MouseEvent mouseEvent) {
+        if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue()!=-1)
+            moveTaskB.setText("Done");
+        if(tableToDo.getSelectionModel().selectedIndexProperty().getValue()!=-1)
+            tableToDo.getSelectionModel().clearSelection();
+        if(doneList.getSelectionModel().getSelectedIndex() != -1)
+            doneList.getSelectionModel().clearSelection();
+        deleteB.setDisable(false);
+    }
+
+    public void checkDone(MouseEvent mouseEvent) {
+        moveTaskB.setDisable(true);
+        deleteB.setDisable(false);
+        if(tableToDo.getSelectionModel().selectedIndexProperty().getValue()!=-1)
+            tableToDo.getSelectionModel().clearSelection();
+        if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
+            tableInProgress.getSelectionModel().clearSelection();
     }
 }

@@ -51,7 +51,7 @@ public class RWFile {
     private static void getData(String data){
         try {
             var write = new FileWriter(done, true);
-            write.write(data);
+            write.write(data+"\n");
             write.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,6 +66,7 @@ public class RWFile {
             a.getItems().forEach(i->getData(i,toDo));
             b.getItems().forEach(i->getData(i,inP));
             c.getItems().forEach(RWFile::getData);
+            c.getItems().forEach(System.out::println);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -98,10 +99,20 @@ public class RWFile {
         if(!done.exists())return FXCollections.observableArrayList();
         try {
             Scanner read = new Scanner(done);
+            String oneString = "";
+            while (read.hasNext()) {
+                String r = read.nextLine();
+                if(!r.isBlank())
+                    oneString+=r+"\n";
+                else{
 
-            while (read.hasNext())
-                i.add(read.nextLine());
-
+                    if(!oneString.isBlank())
+                         i.add(oneString);
+                oneString = "";
+                }
+            }
+            if(!oneString.isBlank())
+                i.add(oneString);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

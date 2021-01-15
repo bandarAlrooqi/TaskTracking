@@ -10,6 +10,7 @@
         <ButtonBar opacity="0.84" prefHeight="20.0" prefWidth="812.0">
             <buttons>
                 <Button fx:id="moveTaskB" mnemonicParsing="false" onAction="#clickMoveB" text="Move" ButtonBar.buttonData="LEFT" />
+            <Button fx:id="deleteB" mnemonicParsing="false" text="Delete" />
                 <TextField fx:id="name" promptText="Name" ButtonBar.buttonData="LEFT" />
                 <TextField fx:id="description" promptText="Description" ButtonBar.buttonData="LEFT" />
                 <TextField fx:id="price" promptText="Price" ButtonBar.buttonData="LEFT" />
@@ -29,7 +30,7 @@
                                 <Color red="0.624" green="0.624" blue="0.624" fx:id="x21" />
                             </textFill>
                         </Label>
-                        <TableView fx:id="tableToDo" layoutY="47.0" prefHeight="420.0" prefWidth="330.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
+                        <TableView fx:id="tableToDo" layoutY="47.0" onMousePressed="#checkTodo" prefHeight="420.0" prefWidth="330.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
                             <columns>
                                 <TableColumn fx:id="nameColToDo" prefWidth="59.199983179569244" text="Name" />
                                 <TableColumn fx:id="descriptionToDo" minWidth="9.599937438964844" prefWidth="116.40002059936523" text="Description" />
@@ -41,7 +42,7 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="266.0" prefWidth="402.0">
                     <children>
-                        <TableView fx:id="tableInProgress" layoutY="47.0" prefHeight="420.0" prefWidth="326.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
+                        <TableView fx:id="tableInProgress" layoutY="47.0" onMousePressed="#checkInProgress" prefHeight="420.0" prefWidth="326.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
                             <columns>
                                 <TableColumn fx:id="nameIn" prefWidth="59.199983179569244" text="Name" />
                                 <TableColumn fx:id="descriptionIn" minWidth="9.599937438964844" prefWidth="98.4000244140625" text="Description" />
@@ -69,7 +70,7 @@
                                 <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
                             </textFill>
                         </Label>
-                        <ListView fx:id="doneList" layoutX="14.0" layoutY="44.0" prefHeight="420.0" prefWidth="144.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0" />
+                        <ListView fx:id="doneList" layoutX="14.0" layoutY="44.0" onMousePressed="#checkDone" prefHeight="420.0" prefWidth="144.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0" />
                     </children>
                 </AnchorPane>
             </items>
