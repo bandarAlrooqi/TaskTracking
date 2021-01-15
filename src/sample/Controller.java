@@ -1,17 +1,10 @@
 package sample;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -64,12 +57,12 @@ public class Controller implements Initializable {
         doneList.setItems(RWFile.readDone());
         //rgx for Texts
         name.setTextFormatter(new TextFormatter<>(change -> {
-            addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null));
-            Pattern p = Pattern.compile("[A-za-z[ ]]+");
+            addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue() == null));
+            Pattern p = Pattern.compile("[A-za-z ]+");
             return (p.matcher(change.getControlNewText()).matches()) || (change.getControlNewText().length() == 0) ? change : null;
         }));
-        price.setTextFormatter(new TextFormatter<Object>(change -> {
-            addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null));
+        price.setTextFormatter(new TextFormatter<>(change -> {
+            addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue() == null));
             Pattern p = Pattern.compile("\\d+");
             return (p.matcher(change.getControlNewText()).matches()) || (change.getControlNewText().length() == 0) ? change : null;
         }));
@@ -81,15 +74,13 @@ public class Controller implements Initializable {
         tableInProgress.getSelectionModel().selectedItemProperty().addListener((observableValue, data, t1) -> {
             tableToDo.getSelectionModel().clearSelection();
             boolean check = tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1;
-            if (check) {
-                moveTaskB.setText("Done");
-                moveTaskB.setVisible(true);
-            }else moveTaskB.setVisible(false);
+            moveTaskB.setText(check ? "Done" : "Move");
+            moveTaskB.setVisible(check);
         });
     }
 
 
-    public void clickAddToList(ActionEvent actionEvent) {
+    public void clickAddToList() {
         tableToDo.getItems().add(RWFile.toDo(new Data(name.getText(), description.getText(), Integer.parseInt(price.getText()), dueDate.getValue().atStartOfDay())));
         name.clear();
         description.clear();
@@ -98,7 +89,7 @@ public class Controller implements Initializable {
 
     }
 
-    public void clickMoveB(ActionEvent actionEvent) {
+    public void clickMoveB() {
         moveTaskB.setText("Move");
         int indexToDo = tableToDo.getSelectionModel().selectedIndexProperty().getValue();
         int indexInProgress = tableInProgress.getSelectionModel().selectedIndexProperty().getValue();
@@ -108,7 +99,7 @@ public class Controller implements Initializable {
 
         else if (indexInProgress != -1)
             doneList.getItems().add(RWFile.done(tableInProgress.getItems().remove(indexInProgress)));
-        RWFile.update(tableToDo,tableInProgress,doneList);
+        RWFile.update(tableToDo, tableInProgress, doneList);
         moveTaskB.setVisible(false);
         deleteB.setVisible(false);
         tableToDo.getSelectionModel().clearSelection();
@@ -116,18 +107,18 @@ public class Controller implements Initializable {
 
     }
 
-    public void changeDate(ActionEvent actionEvent) {
-        addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue()==null));
+    public void changeDate() {
+        addToList.setVisible(!(price.getText().length() <= 0 || name.getText().length() <= 0 || description.getText().length() <= 0 || dueDate.getValue() == null));
     }
 
-    public void checkTodo(MouseEvent mouseEvent) {
+    public void checkTodo() {
         moveTaskB.setText("Move");
         switcher(tableInProgress, tableToDo);
 
     }
 
-    public void checkInProgress(MouseEvent mouseEvent) {
-        if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue()!=-1)
+    public void checkInProgress() {
+        if (tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
             moveTaskB.setText("Done");
         switcher(tableToDo, tableInProgress);
     }
@@ -135,35 +126,35 @@ public class Controller implements Initializable {
     private void switcher(TableView<Data> tableToDo, TableView<Data> tableInProgress) {
         moveTaskB.setVisible(false);
         deleteB.setVisible(false);
-        if(tableToDo.getSelectionModel().selectedIndexProperty().getValue()!=-1)
+        if (tableToDo.getSelectionModel().selectedIndexProperty().getValue() != -1)
             tableToDo.getSelectionModel().clearSelection();
-        if(doneList.getSelectionModel().getSelectedIndex() != -1)
+        if (doneList.getSelectionModel().getSelectedIndex() != -1)
             doneList.getSelectionModel().clearSelection();
-        if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue() == -1)return;
+        if (tableInProgress.getSelectionModel().selectedIndexProperty().getValue() == -1) return;
         deleteB.setVisible(true);
         moveTaskB.setVisible(true);
     }
 
-    public void checkDone(MouseEvent mouseEvent) {
+    public void checkDone() {
         moveTaskB.setVisible(false);
         deleteB.setVisible(true);
-        if(tableToDo.getSelectionModel().selectedIndexProperty().getValue()!=-1)
+        if (tableToDo.getSelectionModel().selectedIndexProperty().getValue() != -1)
             tableToDo.getSelectionModel().clearSelection();
-        if(tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
+        if (tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
             tableInProgress.getSelectionModel().clearSelection();
     }
 
-    public void clickDelete(ActionEvent actionEvent) {
+    public void clickDelete() {
         moveTaskB.setVisible(false);
         deleteB.setVisible(false);
-        int indexDoneList ,indexTodoList,indexInP;
-        if((indexDoneList=doneList.getSelectionModel().selectedIndexProperty().get())!=-1)
+        int indexDoneList, indexTodoList, indexInP;
+        if ((indexDoneList = doneList.getSelectionModel().selectedIndexProperty().get()) != -1)
             doneList.getItems().remove(indexDoneList);
-        else if((indexTodoList=tableToDo.getSelectionModel().selectedIndexProperty().getValue())!=-1)
+        else if ((indexTodoList = tableToDo.getSelectionModel().selectedIndexProperty().getValue()) != -1)
             tableToDo.getItems().remove(indexTodoList);
-        else if((indexInP=tableInProgress.getSelectionModel().selectedIndexProperty().getValue()) != -1)
+        else if ((indexInP = tableInProgress.getSelectionModel().selectedIndexProperty().getValue()) != -1)
             tableInProgress.getItems().remove(indexInP);
 
-        RWFile.update(tableToDo,tableInProgress,doneList);
+        RWFile.update(tableToDo, tableInProgress, doneList);
     }
 }
