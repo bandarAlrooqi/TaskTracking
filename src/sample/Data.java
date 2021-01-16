@@ -43,6 +43,22 @@ public class Data {
         return date.toLocalDate();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     private String getDurationAsString(Duration duration) {
         StringBuilder durationAsStringBuilder = new StringBuilder();
         if (duration.toDays() > 0) {
