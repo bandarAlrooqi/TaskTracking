@@ -19,6 +19,7 @@ public class RWFile {
     }
 
     public static Data inProgress(Data data) {
+        data.startWorkingDate = LocalDateTime.now();
         return getData(data, inP);
     }
 
@@ -99,20 +100,20 @@ public class RWFile {
         if(!done.exists())return FXCollections.observableArrayList();
         try {
             Scanner read = new Scanner(done);
-            String oneString = "";
+            StringBuilder oneString = new StringBuilder();
             while (read.hasNext()) {
                 String r = read.nextLine();
                 if(!r.isBlank())
-                    oneString+=r+"\n";
+                    oneString.append(r).append("\n");
                 else{
 
-                    if(!oneString.isBlank())
-                         i.add(oneString);
-                oneString = "";
+                    if(!oneString.toString().isBlank())
+                         i.add(oneString.toString());
+                oneString = new StringBuilder();
                 }
             }
-            if(!oneString.isBlank())
-                i.add(oneString);
+            if(!oneString.toString().isBlank())
+                i.add(oneString.toString());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

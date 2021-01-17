@@ -8,6 +8,8 @@ public class Data {
     String name, description;
     LocalDateTime date;
     LocalDateTime receiveDate;
+
+    LocalDateTime startWorkingDate;
     LocalDateTime endDate;
     int price;
 
@@ -91,7 +93,8 @@ public class Data {
 
     @Override
     public String toString() {
-        var d = (getDurationAsString(Duration.between(receiveDate, endDate)).isBlank()) ? "No Time" : getDurationAsString(Duration.between(receiveDate, endDate));
-        return "Name: " + name + "\nDescription: " + description + "\nPrice: " + price + "\nCompleted in : " + d + "\n\n";
+        var fromReceiveTillNow = (getDurationAsString(Duration.between(receiveDate, endDate)).isBlank()) ? "No Time" : getDurationAsString(Duration.between(receiveDate, endDate));
+        var fromWorking = (getDurationAsString(Duration.between(startWorkingDate, endDate)).isBlank()) ? "No Time" : getDurationAsString(Duration.between(startWorkingDate, endDate));
+        return "Name: " + name + "\nDescription: " + description + "\nPrice: " + price + "\nTime taken from received date: " + fromReceiveTillNow+ "\nTime taken in progress: "+fromWorking+"\n\n";
     }
 }
