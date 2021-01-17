@@ -17,6 +17,8 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Task Tracking");
         primaryStage.setScene(new Scene(root));
+        primaryStage.setHeight(600);
+        primaryStage.setWidth(1200);
         primaryStage.show();
     }
 }
