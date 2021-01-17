@@ -1,5 +1,6 @@
 package sample;
 
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,35 +33,27 @@ public class Data {
     public int getPrice() {
         return price;
     }
-
     public String getName() {
         return name;
     }
-
     public String getDescription() {
         return description;
     }
-
     public LocalDate getDate() {
         return date.toLocalDate();
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
-
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
-
     public void setPrice(int price) {
         this.price = price;
     }
-
     private String getDurationAsString(Duration duration) {
         StringBuilder durationAsStringBuilder = new StringBuilder();
         if (duration.toDays() > 0) {
@@ -95,6 +88,6 @@ public class Data {
     public String toString() {
         var fromReceiveTillNow = (getDurationAsString(Duration.between(receiveDate, endDate)).isBlank()) ? "No Time" : getDurationAsString(Duration.between(receiveDate, endDate));
         var fromWorking = (getDurationAsString(Duration.between(startWorkingDate, endDate)).isBlank()) ? "No Time" : getDurationAsString(Duration.between(startWorkingDate, endDate));
-        return "Name: " + name + "\nDescription: " + description + "\nPrice: " + price + "\nTime taken from received date: " + fromReceiveTillNow+ "\nTime taken in progress: "+fromWorking+"\n\n";
+        return "Name: " + name + "\nDescription: " + description + "\nPrice: " + price +"\nFinish Date: "+endDate.toLocalDate()+ "\nTime taken from received date: " + fromReceiveTillNow+ "\nTime taken in progress: "+fromWorking+"\n\n";
     }
 }

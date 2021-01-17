@@ -6,8 +6,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class RWFile {
     static File toDo = new File("toDo");
@@ -119,6 +121,39 @@ public class RWFile {
             e.printStackTrace();
         }
         return i;
+    }
+    public static String calculateIncome(int month){
+        TreeMap<LocalDate,Integer> map = new TreeMap<>();
+        int income = 0;
+        try {
+            Scanner read = new Scanner(done);
+            while (read.hasNext()){
+                String finish = read.next();
+                if(!finish.equals("Price:"))continue;
+                int price = Integer.parseInt(read.next());
+                read.next();
+                read.next();
+                var date = LocalDate.parse(read.next());
+                if(map.containsKey(date))
+                    map.put(date,map.get(date) + price);
+                else
+                    map.put(date,price);
+
+            }
+            read.close();
+            int months = 1;
+            if(map.size() == 0)return "0";
+            var temp = map.firstKey();
+            for(var price:map.keySet()){
+                if(price.getYear()!=temp.getYear() || price.getMonthValue()!= temp.getMonthValue())months++;
+                if(months>month)break;
+                income+=map.get(price);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return income+"";
     }
 
 }

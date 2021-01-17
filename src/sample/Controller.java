@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ScrollEvent;
 
 import java.net.URL;
 import java.util.Optional;
@@ -36,6 +37,10 @@ public class Controller implements Initializable {
     public TextField description = new TextField();
     public TextField price = new TextField();
     public DatePicker dueDate = new DatePicker();
+    //Slider
+    public Slider incomeSlider;
+    //Label
+    public Label incomeL;
 
     int edit = 0;
     Data data;
@@ -58,6 +63,7 @@ public class Controller implements Initializable {
         tableToDo.setItems(RWFile.readToDo());
         tableInProgress.setItems(RWFile.readInProgress());
         doneList.setItems(RWFile.readDone());
+        incomeL.setText(RWFile.calculateIncome(1));
         //rgx for Texts
         name.setTextFormatter(new TextFormatter<>(change -> {
             switchStyle();
@@ -240,4 +246,7 @@ public class Controller implements Initializable {
         moveTaskB.setVisible(!addToList.isVisible());
     }
 
+    public void checkIncome() {
+       incomeL.setText(RWFile.calculateIncome((int) incomeSlider.getValue()));
+    }
 }
