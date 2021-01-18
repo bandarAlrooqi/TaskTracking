@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.ScrollEvent;
 
 import java.net.URL;
 import java.util.Optional;
@@ -117,6 +116,7 @@ public class Controller implements Initializable {
         else if (indexInProgress != -1)
             doneList.getItems().add(RWFile.done(tableInProgress.getItems().remove(indexInProgress)));
         RWFile.update(tableToDo, tableInProgress, doneList);
+        checkIncome();
         moveTaskB.setVisible(false);
         deleteB.setVisible(false);
         addToList.setVisible(false);
@@ -194,6 +194,7 @@ public class Controller implements Initializable {
             tableInProgress.getItems().remove(indexInP);
 
         RWFile.update(tableToDo, tableInProgress, doneList);
+        checkIncome();
         edit =0;
     }
     public void edit(){
