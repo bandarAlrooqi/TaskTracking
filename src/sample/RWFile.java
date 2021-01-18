@@ -153,7 +153,7 @@ public class RWFile {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return (month ==1)?"income for one month: "+income:(month==2)?"income for two months: "+income:(income==3)?"income for three months: "+income:"income for four months: "+income;
+        return (month ==1)?"income for one month: "+income:(month==2)?"income for two months: "+income:(month==3)?"income for three months: "+income:"income for four months: "+income;
     }
 
 }
