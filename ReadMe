@@ -1,0 +1,8 @@
+This is a javaFX application.
+this application has two tables (To do , in progress ) and a list of done tasks.
+the application read and writes to files and has the ability to calculate total income for one ,two, three and four months.
+the application keep track of when you add the task and when you start working and finally when you finish the task and provide the time taken for each.
+the application has the ability to edit or delete a task .
+
+javaFx JDK 11.0.1
+java JDK 15.0.1
