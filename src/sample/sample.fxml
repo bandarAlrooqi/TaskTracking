@@ -32,6 +32,7 @@
                     <TableColumn fx:id="nameColToDo" prefWidth="59.199983179569244" text="Name" />
                     <TableColumn fx:id="descriptionToDo" minWidth="9.599937438964844" prefWidth="116.40002059936523" text="Description" />
                     <TableColumn fx:id="priceToDo" minWidth="0.0" prefWidth="48.800018310546875" text="Price" />
+               <TableColumn fx:id="payToDoCol"  prefWidth="75.0" text="Paid" />
                     <TableColumn fx:id="dueDateToDo" prefWidth="103.19999084472659" text="Due Date" />
                 </columns>
             </TableView>
@@ -42,6 +43,7 @@
                     <TableColumn fx:id="nameIn" prefWidth="59.199983179569244" text="Name" />
                     <TableColumn fx:id="descriptionIn" minWidth="9.599937438964844" prefWidth="98.4000244140625" text="Description" />
                     <TableColumn fx:id="priceIn" minWidth="0.0" prefWidth="41.5999755859375" text="Price" />
+                    <TableColumn fx:id="payInPCol" prefWidth="75.0" text="Paid" />
                     <TableColumn fx:id="dueDateIn" prefWidth="126.39990234375" text="Due Date" />
                 </columns>
             </TableView>
@@ -61,7 +63,7 @@
                 </font>
             </Label>
             <ListView fx:id="doneList" layoutX="14.0" layoutY="61.0" onMousePressed="#checkDone" prefHeight="424.0" prefWidth="144.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="61.0" />
-         <Slider fx:id="incomeSlider" layoutX="2.0" layoutY="41.0" max="4.0" min="1.0" onMouseReleased="#checkIncome" value="1.0" />
+         <Slider fx:id="incomeSlider" layoutX="2.0" layoutY="41.0" max="5.0" min="1.0" onMouseReleased="#checkIncome" value="1.0" />
          <Label fx:id="incomeL" layoutX="103.0" layoutY="19.0" text="0" textFill="#9f9f9f" />
         </AnchorPane>
     </SplitPane>

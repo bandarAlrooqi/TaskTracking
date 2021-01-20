@@ -1,10 +1,16 @@
 package sample;
 
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.Optional;
@@ -19,12 +25,14 @@ public class Controller implements Initializable {
     public TableColumn<Data, String> descriptionToDo = new TableColumn<>();
     public TableColumn<Data, Integer> priceToDo = new TableColumn<>();
     public TableColumn<Data, String> dueDateToDo = new TableColumn<>();
+    public TableColumn<Data, Boolean> payToDoCol = new TableColumn<>();
     // Table two
     public TableView<Data> tableInProgress = new TableView<>();
     public TableColumn<Data, String> nameIn = new TableColumn<>();
     public TableColumn<Data, String> descriptionIn = new TableColumn<>();
     public TableColumn<Data, Integer> priceIn = new TableColumn<>();
     public TableColumn<Data, String> dueDateIn = new TableColumn<>();
+    public TableColumn<Data, Boolean> payInPCol = new TableColumn<>();
     // Done List
     public ListView<String> doneList;
     //Button
@@ -41,23 +49,21 @@ public class Controller implements Initializable {
     //Label
     public Label incomeL;
 
+
+
     int edit = 0;
     Data data;
+    TableView<Data> table = new TableView<>();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addToList.setVisible(false);
         moveTaskB.setVisible(false);
         deleteB.setVisible(false);
         dueDate.setEditable(false);
-        nameColToDo.setCellValueFactory(new PropertyValueFactory<>("name"));
-        descriptionToDo.setCellValueFactory(new PropertyValueFactory<>("description"));
-        priceToDo.setCellValueFactory(new PropertyValueFactory<>("price"));
-        dueDateToDo.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-        nameIn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        descriptionIn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        priceIn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        dueDateIn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        setTable(nameColToDo, descriptionToDo, priceToDo, dueDateToDo, tableToDo, payToDoCol);
+        setTable(nameIn, descriptionIn, priceIn, dueDateIn, tableInProgress, payInPCol);
+
         //initial values
         tableToDo.setItems(RWFile.readToDo());
         tableInProgress.setItems(RWFile.readInProgress());
@@ -89,6 +95,19 @@ public class Controller implements Initializable {
             moveTaskB.setText(check ? "Done" : "Move");
             moveTaskB.setVisible(check);
         });
+
+
+    }
+
+    private void setTable(TableColumn<Data, String> name, TableColumn<Data, String> description, TableColumn<Data, Integer> price, TableColumn<Data, String> dueDate, TableView<Data> table, TableColumn<Data, Boolean> payCol) {
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        description.setCellValueFactory(new PropertyValueFactory<>("description"));
+        price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        dueDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        table.setEditable(true);
+        payCol.setEditable(true);
+        payCol.setCellValueFactory(p->p.getValue().isPaid(tableToDo,tableInProgress,doneList));
+        payCol.setCellFactory(CheckBoxTableCell.forTableColumn(payCol));
 
     }
 
@@ -200,8 +219,7 @@ public class Controller implements Initializable {
     public void edit(){
         addToList.setVisible(true);
         switchStyle();
-        var table = (tableToDo.getSelectionModel().selectedIndexProperty().getValue() != -1)?tableToDo:tableInProgress;
-        System.out.println(edit);
+         table = (tableToDo.getSelectionModel().selectedIndexProperty().getValue() != -1)?tableToDo:edit!=2?tableInProgress:table;
         if(edit==1){
             data = table.getItems().remove(table.getSelectionModel().getFocusedIndex());
             name.setText(data.name);
@@ -211,7 +229,7 @@ public class Controller implements Initializable {
             deleteB.setVisible(false);
             edit++;
         }
-        else if(edit == 2) {
+        else {
             data.name = name.getText();
             data.description=description.getText();
             data.price=Integer.parseInt(price.getText());

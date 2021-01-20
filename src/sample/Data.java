@@ -1,18 +1,23 @@
 package sample;
 
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Data {
     String name, description;
+    int price;
+    ObservableBooleanValue paid = new SimpleBooleanProperty(false);
     LocalDateTime date;
     LocalDateTime receiveDate;
-
-    LocalDateTime startWorkingDate;
+    LocalDateTime startWorkingDate = LocalDateTime.now();
     LocalDateTime endDate;
-    int price;
 
     public Data(String name, String description, int price, LocalDateTime date) {
         this.name = name;
@@ -21,14 +26,19 @@ public class Data {
         this.date = date;
         receiveDate = LocalDateTime.now();
     }
-    public Data(String name, String description, int price, LocalDateTime date,LocalDateTime receiveDate) {
+    public Data(String name, String description, int price, LocalDateTime date, LocalDateTime receiveDate, LocalDateTime startWorkingDate, boolean paid) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.date = date;
         this.receiveDate = receiveDate;
+        this.startWorkingDate = startWorkingDate;
+        this.paid = new SimpleBooleanProperty(paid);
     }
-
+    public ObservableBooleanValue isPaid(TableView<Data> t1, TableView<Data> t2, ListView<String> l) {
+        RWFile.update(t1,t2,l);
+        return paid;
+    }
 
     public int getPrice() {
         return price;
@@ -86,8 +96,11 @@ public class Data {
 
     @Override
     public String toString() {
-        var fromReceiveTillNow = (getDurationAsString(Duration.between(receiveDate, endDate)).isBlank()) ? "No Time" : getDurationAsString(Duration.between(receiveDate, endDate));
-        var fromWorking = (getDurationAsString(Duration.between(startWorkingDate, endDate)).isBlank()) ? "No Time" : getDurationAsString(Duration.between(startWorkingDate, endDate));
-        return "Name: " + name + "\nDescription: " + description + "\nPrice: " + price +"\nFinish Date: "+endDate.toLocalDate()+ "\nTime taken from received date: " + fromReceiveTillNow+ "\nTime taken in progress: "+fromWorking+"\n\n";
+        var fromReceiveTillNow = (getDurationAsString(Duration.between(receiveDate, endDate)).isBlank()) ?
+                "No Time" : getDurationAsString(Duration.between(receiveDate, endDate));
+        var fromWorking = (getDurationAsString(Duration.between(startWorkingDate, endDate)).isBlank()) ?
+                "No Time" : getDurationAsString(Duration.between(startWorkingDate, endDate));
+        return "Name: " + name + "\nDescription: " + description + "\nPrice: " + price +"\nPaid: "+(paid.getValue()?"YES":"NO")+"\nFinish Date: "
+                +endDate.toLocalDate()+ "\nTime taken from received date: " + fromReceiveTillNow+ "\nTime taken in progress: "+fromWorking+"\n\n";
     }
 }

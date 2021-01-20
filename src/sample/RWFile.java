@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -32,7 +33,8 @@ public class RWFile {
     private static Data getData(Data data, File file) {
         try {
             var write = new FileWriter(file, true);
-            write.write(data.name + "\n" + data.description + "\n" + data.price + "\n" + data.date + "\n" + data.receiveDate + "\n\n");
+            write.write(data.name + "\n" + data.description + "\n" + data.price + "\n" +data.paid.getValue()+"\n"+ data.date + "\n" +
+                     data.receiveDate +"\n"+data.startWorkingDate+"\n\n");
             write.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,7 +71,6 @@ public class RWFile {
             a.getItems().forEach(i->getData(i,toDo));
             b.getItems().forEach(i->getData(i,inP));
             c.getItems().forEach(RWFile::getData);
-            c.getItems().forEach(System.out::println);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -86,15 +87,16 @@ public class RWFile {
                 if(name.length() == 0)continue;
                 var des = read.nextLine();
                 var price = read.nextLine();
+                var paid = read.nextLine();
                 var date =read.nextLine();
                 var rec = read.nextLine();
-                i.add(new Data(name,des,Integer.parseInt(price),LocalDateTime.parse(date),LocalDateTime.parse(rec)));
+                var start = read.nextLine();
+                i.add(new Data(name,des,Integer.parseInt(price),LocalDateTime.parse(date),LocalDateTime.parse(rec),LocalDateTime.parse(start),Boolean.parseBoolean(paid)));
             }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         return i;
     }
     public static ObservableList<String> readDone(){
@@ -132,6 +134,8 @@ public class RWFile {
                 if(!finish.equals("Price:"))continue;
                 int price = Integer.parseInt(read.next());
                 read.next();
+                if(read.next().equals("NO"))continue;
+                read.next();
                 read.next();
                 var date = LocalDate.parse(read.next());
                 if(map.containsKey(date))
@@ -146,14 +150,15 @@ public class RWFile {
             var temp = map.firstKey();
             for(var price:map.keySet()){
                 if(price.getYear()!=temp.getYear() || price.getMonthValue()!= temp.getMonthValue())months++;
-                if(months>month)break;
+                if(months>month && month!=5)break;
                 income+=map.get(price);
             }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return (month ==1)?"income for one month: "+income:(month==2)?"income for two months: "+income:(month==3)?"income for three months: "+income:"income for four months: "+income;
+        return (month ==1)?"income for one month: "+income:(month==2)?"income for two months: "+income:(month==3)?
+                "income for three months: "+income:(month==4)?"income for four months: "+income:"total income: "+income;
     }
 
 }
