@@ -6,8 +6,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
@@ -45,10 +48,11 @@ public class Controller implements Initializable {
     public Label incomeL;
 
 
-
+    String doneListString = "";
     int edit = 0;
     Data data;
     TableView<Data> table = new TableView<>();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addToList.setVisible(false);
@@ -108,7 +112,6 @@ public class Controller implements Initializable {
 
 
     public void clickAddToList() {
-        System.out.println("CLICk "+ edit);
         switchStyle();
         if(edit != 0){
             edit();
@@ -180,12 +183,13 @@ public class Controller implements Initializable {
 
     public void checkDone() {
         moveTaskB.setVisible(false);
-        addToList.setVisible(false);
+
         deleteB.setVisible(true);
         if (tableToDo.getSelectionModel().selectedIndexProperty().getValue() != -1)
             tableToDo.getSelectionModel().clearSelection();
         if (tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
             tableInProgress.getSelectionModel().clearSelection();
+        if(doneList.getSelectionModel().selectedIndexProperty().getValue() != -1){edit =1;switchStyle();addToList.setVisible(true);}
     }
 
     public void clickDelete() {
@@ -216,6 +220,18 @@ public class Controller implements Initializable {
         switchStyle();
          table = (tableToDo.getSelectionModel().selectedIndexProperty().getValue() != -1)?tableToDo:edit!=2?tableInProgress:table;
         if(edit==1){
+            if(doneList.getSelectionModel().getSelectedIndex()!=-1){
+                doneListString = doneList.getItems().remove(doneList.getSelectionModel().getSelectedIndex());
+                var value = doneListString.replaceAll("\n"," ");
+                var values = value.split(" ");
+                name.setText(values[1].trim());
+                description.setText(values[3].trim());
+                price.setText(values[5].trim());
+                dueDate.setValue(LocalDate.parse(values[10].trim()));
+                deleteB.setVisible(false);
+                edit++;
+                return;
+            }
             data = table.getItems().remove(table.getSelectionModel().getFocusedIndex());
             name.setText(data.name);
             description.setText(data.description);
@@ -225,6 +241,30 @@ public class Controller implements Initializable {
             edit++;
         }
         else {
+            if(!doneListString.isBlank()){
+                StringBuilder m = new StringBuilder(doneListString);
+                m.replace(6,doneListString.indexOf("Description:")-1,name.getText());
+                m.replace(m.indexOf("Description:")+"Description: ".length(),m.indexOf("Price: ")-1,description.getText());
+                m.replace(m.indexOf("Price:")+"Price: ".length(),m.indexOf("Paid:")-1,price.getText());
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.getButtonTypes().set(0,ButtonType.YES);
+                alert.getButtonTypes().add(ButtonType.NO);
+                alert.getButtonTypes().remove(1);
+                alert.setContentText("Is the task paid ? ");
+                Optional<ButtonType> a =alert.showAndWait();
+                m.replace(m.indexOf("Paid:")+"Paid: ".length(),+m.indexOf("Finish")-1,((a.isPresent())&&a.get().getText().equals("Yes"))?"YES":"NO");
+                doneList.getItems().add(m.toString());
+                switchButton();
+                moveTaskB.setVisible(false);
+                deleteB.setVisible(false);
+                RWFile.update(tableToDo,tableInProgress,doneList);
+                checkIncome();
+                clear();
+                edit=0;
+                doneListString= "";
+
+                return;
+            }
             data.name = name.getText();
             data.description=description.getText();
             data.price=Integer.parseInt(price.getText());
@@ -237,6 +277,7 @@ public class Controller implements Initializable {
             clear();
             edit=0;
         }
+
     }
     public void switchStyle(){
         if(edit == 0) {
