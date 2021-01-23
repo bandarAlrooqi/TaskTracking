@@ -181,13 +181,11 @@ public class Controller implements Initializable {
 
     public void checkDone() {
         moveTaskB.setVisible(false);
-
-        deleteB.setVisible(true);
         if (tableToDo.getSelectionModel().selectedIndexProperty().getValue() != -1)
             tableToDo.getSelectionModel().clearSelection();
         if (tableInProgress.getSelectionModel().selectedIndexProperty().getValue() != -1)
             tableInProgress.getSelectionModel().clearSelection();
-        if(doneList.getSelectionModel().selectedIndexProperty().getValue() != -1){edit =1;switchStyle();addToList.setVisible(true);}
+        if(doneList.getSelectionModel().selectedIndexProperty().getValue() != -1){edit =1;switchStyle();addToList.setVisible(true);deleteB.setVisible(true);}
     }
 
     public void clickDelete() {
