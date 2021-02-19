@@ -61,6 +61,7 @@ public class Controller implements Initializable {
         setTable(nameColToDo, descriptionToDo, priceToDo, dueDateToDo, tableToDo, payToDoCol);
         setTable(nameIn, descriptionIn, priceIn, dueDateIn, tableInProgress, payInPCol);
 
+
         //initial values
         tableToDo.setItems(RWFile.readToDo());
         tableInProgress.setItems(RWFile.readInProgress());
@@ -99,6 +100,9 @@ public class Controller implements Initializable {
     private void setTable(TableColumn<Data, String> name, TableColumn<Data, String> description, TableColumn<Data, Integer> price, TableColumn<Data, String> dueDate, TableView<Data> table, TableColumn<Data, Boolean> payCol) {
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         description.setCellValueFactory(new PropertyValueFactory<>("description"));
+        description.setMinWidth(250);
+        table.setMinWidth(455);
+        name.setMinWidth(name.getWidth()+10);
         price.setCellValueFactory(new PropertyValueFactory<>("price"));
         dueDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         table.setEditable(true);
@@ -218,8 +222,8 @@ public class Controller implements Initializable {
         if(edit==1){
             if(doneList.getSelectionModel().getSelectedIndex()!=-1){
                 doneListString = doneList.getItems().remove(doneList.getSelectionModel().getSelectedIndex());
-                var value = doneListString.replaceAll("\n"," ");
-                var values = value.split(" ");
+                var value = doneListString.replaceAll("\\n"," ");
+                var values = value.split("\\s+");
                 name.setText(values[1].trim());
                 description.setText(values[3].trim());
                 price.setText(values[5].trim());

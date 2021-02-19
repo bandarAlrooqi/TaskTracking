@@ -19,7 +19,7 @@ public class Main extends Application {
         primaryStage.setTitle("Task Tracking");
         primaryStage.setScene(new Scene(root));
         primaryStage.setHeight(600);
-        primaryStage.setWidth(1200);
+        primaryStage.setWidth(1500);
         primaryStage.getIcons().add(new Image("file:icon.png"));
         primaryStage.show();
     }

@@ -147,7 +147,6 @@ public class RWFile {
             read.close();
 
             int months = 1;
-            int last = map.lastKey();
             if(map.size() == 0)return "0 income";
             for(var i : map.descendingKeySet()){
                 income += map.get(i);
