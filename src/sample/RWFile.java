@@ -124,33 +124,35 @@ public class RWFile {
         return i;
     }
     public static String calculateIncome(int month){
-        TreeMap<LocalDate,Integer> map = new TreeMap<>();
+        TreeMap<Integer, Integer> map = new TreeMap<>();
         int income = 0;
         try {
             Scanner read = new Scanner(done);
             while (read.hasNext()){
                 String finish = read.next();
-                if(!finish.equals("Price:"))continue;
+                if(!finish.equalsIgnoreCase("Price:"))continue;
                 int price = Integer.parseInt(read.next());
                 read.next();
                 if(read.next().equals("NO"))continue;
                 read.next();
                 read.next();
                 var date = LocalDate.parse(read.next());
-                if(map.containsKey(date))
-                    map.put(date,map.get(date) + price);
+                var d = date.getYear() + date.getMonthValue();
+                if(map.containsKey(d))
+                    map.put(d,map.get(d) + price);
                 else
-                    map.put(date,price);
+                    map.put(d,price);
 
             }
             read.close();
+
             int months = 1;
-            if(map.size() == 0)return "0";
-            var temp = map.firstKey();
-            for(var price:map.keySet()){
-                if(price.getYear()!=temp.getYear() || price.getMonthValue()!= temp.getMonthValue())months++;
-                if(months>month && month!=5)break;
-                income+=map.get(price);
+            int last = map.lastKey();
+            if(map.size() == 0)return "0 income";
+            for(var i : map.descendingKeySet()){
+                income += map.get(i);
+                if(months == month)break;
+                months++;
             }
 
         } catch (FileNotFoundException e) {
