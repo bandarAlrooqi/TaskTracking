@@ -223,11 +223,10 @@ public class Controller implements Initializable {
             if(doneList.getSelectionModel().getSelectedIndex()!=-1){
                 doneListString = doneList.getItems().remove(doneList.getSelectionModel().getSelectedIndex());
                 var value = doneListString.replaceAll("\\n"," ");
-                var values = value.split("\\s+");
-                name.setText(values[1].trim());
-                description.setText(values[3].trim());
-                price.setText(values[5].trim());
-                dueDate.setValue(LocalDate.parse(values[10].trim()));
+                name.setText(value.substring(6,value.indexOf("Description:")).trim());
+                description.setText(value.substring(value.indexOf("Description: ")+13,value.indexOf("Price:")).trim());
+                price.setText(value.substring(value.indexOf("Price:")+7,value.indexOf("Paid:")).trim());
+                dueDate.setValue(LocalDate.parse(value.substring(value.indexOf("Date: ")+6,value.indexOf("Time taken from")).trim()));
                 deleteB.setVisible(false);
                 edit++;
                 return;
